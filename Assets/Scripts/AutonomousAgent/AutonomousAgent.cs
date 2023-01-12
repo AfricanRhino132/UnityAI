@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class AutonomousAgent : Agent
 {
+    public float wanderDistance = 1;
+    public float wanderRadius = 3;
+    public float wanderDisplacement = 5;
+
+    public float wanderAngle { get; set; } = 0;
+
     void Update()
     {
         var objects = perception.GetGameObjects();
@@ -16,8 +22,13 @@ public class AutonomousAgent : Agent
 
         if (objects.Length > 0) 
         {
-            Vector3 direction = (objects[0].transform.position - transform.position).normalized;
-            movement.ApplyForce(direction * 2);
+            //movement.ApplyForce(Steering.Seek(this, objects[0]) * 0);
+            movement.ApplyForce(Steering.Flee(this, objects[0]) * 1);
+        }
+
+        if (movement.acceleration.sqrMagnitude <= movement.maxForce * 0.1f)
+        {
+            movement.ApplyForce(Steering.Wander(this));
         }
 
         transform.position = Utilities.Wrap(transform.position, new Vector3(-10, -10, -10), new Vector3(10, 10, 10));
