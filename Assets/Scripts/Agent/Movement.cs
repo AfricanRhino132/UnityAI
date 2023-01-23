@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
 
     [Range(1, 10)] public float maxSpeed = 5;
     [Range(1, 10)] public float minSpeed = 5;
-    [Range(1, 10)] public float maxForce = 5;
+    [Range(1, 100)] public float maxForce = 5;
 
     public void ApplyForce(Vector3 force)
     {
@@ -28,5 +28,11 @@ public class Movement : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(velocity);
         }
         acceleration = Vector3.zero;
+    }
+
+    public void MoveTowards(Vector3 target)
+    {
+        Vector3 direction = (target - transform.position).normalized;
+        ApplyForce(direction * maxForce);
     }
 }
